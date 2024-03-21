@@ -1,6 +1,6 @@
-import java.awt.Color;
-import javax.swing.*;
-import com.formdev.flatlaf.*;
+package RtoRMusic;
+
+import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Controller extends javax.swing.JFrame {
 	public Controller(){

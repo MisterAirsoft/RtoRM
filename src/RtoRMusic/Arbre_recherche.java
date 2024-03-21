@@ -1,3 +1,4 @@
+package RtoRMusic;
 
 class Noeud {
 	public Musique musique;
