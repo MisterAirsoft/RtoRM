@@ -79,6 +79,35 @@ public class Model {
         }
     	
     	return play_list;
+    
+    public TreeSet<Musique> Recherche(String mot_clef) {
+    	TreeSet<Musique >new_play_list = new TreeSet<Musique>();
+    	mot_clef= mot_clef.toUpperCase();
+    	for (Musique music : play_list) {
+    		if (music.titre.toUpperCase().contains(mot_clef)) {
+    			new_play_list.add(music);
+    			
+    		}
+    		else {
+    			if (music.album.toUpperCase().contains(mot_clef)) {
+        			new_play_list.add(music);
+        			
+        		}
+    			else {
+        			if (music.annee.toUpperCase().contains(mot_clef)) {
+            			new_play_list.add(music);
+            			
+            		}
+        			{
+            			if (music.artist.toUpperCase().contains(mot_clef)) {
+                			new_play_list.add(music);
+                			
+                		}
+            		}
+        		}
+    		}
+    	}
+    	return new_play_list;
     }
 }
 
