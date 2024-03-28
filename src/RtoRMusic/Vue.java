@@ -1,108 +1,86 @@
 package RtoRMusic;
-
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.io.File;
-import java.util.TreeSet;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.awt.BorderLayout;
 
-public class Vue{
-	Model m;
-	TreeSet<Musique> play_list ;
-	public JMenuBar createMenuBar() {
-		JMenuBar menuBar=new JMenuBar();
-		JMenuItem boutonPlaylistLike=new JMenuItem("Playlist aimée");
-		JMenuItem boutonPlaylistSuggestion=new JMenuItem("Suggestion");
-		JMenuItem boutonPlaylistRecherche=new JMenuItem("rechercher");
-		menuBar.add(boutonPlaylistLike);
-		menuBar.add(boutonPlaylistRecherche);
-		menuBar.add(boutonPlaylistSuggestion);
-		return menuBar;
-	}
+public class Vue {
+    private Model m;
+    private TreeSet<Musique> play_list;
+    private JTextField searchField;
 
-   
+    
+    
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
-    	m = new Model();
+    	 Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+        m = new Model();
         JFrame frame = new JFrame("Album Art Gallery");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	frame.setJMenuBar( createMenuBar() );
-        // Créer un panneau pour afficher les pochettes d'albums dans une grille
-        JPanel panel = new JPanel(new GridLayout(0, columns, 10, 10)); // Ajouter des marges de 10 pixels
-        
+      
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // Barre de recherche
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        searchField = new JTextField(20);
+        JButton searchButton = new JButton("Rechercher");
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchTerm = searchField.getText();
+                if (!searchTerm.isEmpty()) {
+                    m.rechercherMusique(searchTerm);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer un terme de recherche.");
+                }
+            }
+        });
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        mainPanel.add(searchPanel, BorderLayout.NORTH);
+
+        // Affichage de la liste de musiques
+        JPanel musicPanel = new JPanel(new GridLayout(0, columns, 10, 10));
         play_list = m.construire_play_list(folderPath);
-        // Charger les fichiers audio du dossier spécifié
-        File folder = new File(folderPath);
-        File[] files = folder.listFiles();
+        afficherMusiques(musicPanel, play_list, imageSize);
+        mainPanel.add(new JScrollPane(musicPanel), BorderLayout.CENTER);
 
-        for (Musique musique : play_list) {
-			ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
-			Image resizedImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
-			JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
-			imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-			
-			JLabel titleLabel = new JLabel("Title: " + musique.titre);
-			JLabel artistLabel = new JLabel("Artist: " + musique.artist);
-			JLabel genreLabel = new JLabel("Album: " + musique.genre);
-			JLabel albumLabel = new JLabel("Album: " + musique.album);
-			
-			JPanel itemPanel = new JPanel(new BorderLayout());
-			
-			itemPanel.add(imageLabel, BorderLayout.WEST);
-
-			// Créer un panneau pour contenir les informations texte à droite
-			JPanel textPanel = new JPanel(new GridLayout(3, 1));
-
-			// Ajouter les étiquettes pour le titre, l'artiste et le genre dans le panneau
-			// de texte
-			textPanel.add(titleLabel);
-			textPanel.add(artistLabel);
-			textPanel.add(albumLabel);
-
-			// Ajouter le panneau de texte à droite
-			itemPanel.add(textPanel, BorderLayout.CENTER);
-
-			// Ajouter l'ensemble au panneau principal
-			panel.add(itemPanel);
-				
-			
-		}
-		
-
-        // Ajouter le panneau de grille à un JScrollPane
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        // Ajouter le JScrollPane à la fenêtre
-        frame.getContentPane().add(scrollPane);
-
-        // Ajuster la taille de la fenêtre au contenu
+        frame.getContentPane().add(mainPanel);
         frame.pack();
-
-        // Centrer la fenêtre sur l'écran
         frame.setLocationRelativeTo(null);
-
-        // Afficher la fenêtre
         frame.setVisible(true);
     }
 
-    private static boolean isAudioFile(String fileName) {
-        String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-        return extension.equals("mp3") || extension.equals("wav") || extension.equals("flac") || extension.equals("ogg");
+    void afficherMusiques(JPanel panel, TreeSet<Musique> musiques, int imageSize) {
+        panel.removeAll(); // Nettoyer le panneau
+        for (Musique musique : musiques) {
+            ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
+            Image resizedImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
+            JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+            imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            JLabel titleLabel = new JLabel("Title: " + musique.titre);
+            JLabel artistLabel = new JLabel("Artist: " + musique.artist);
+            JLabel genreLabel = new JLabel("Album: " + musique.genre);
+            JLabel albumLabel = new JLabel("Album: " + musique.album);
+
+            JPanel itemPanel = new JPanel(new BorderLayout());
+
+            itemPanel.add(imageLabel, BorderLayout.WEST);
+
+            JPanel textPanel = new JPanel(new GridLayout(3, 1));
+            textPanel.add(titleLabel);
+            textPanel.add(artistLabel);
+            textPanel.add(albumLabel);
+            itemPanel.add(textPanel, BorderLayout.CENTER);
+
+            panel.add(itemPanel);
+        }
+        panel.revalidate(); // Mettre à jour le panneau
+        panel.repaint(); // Redessiner le panneau
     }
 }
 
