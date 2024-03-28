@@ -79,6 +79,7 @@ public class Model {
         }
     	
     	return play_list;
+    	}
     
     public TreeSet<Musique> Recherche(String mot_clef) {
     	TreeSet<Musique >new_play_list = new TreeSet<Musique>();
@@ -110,5 +111,6 @@ public class Model {
     	return new_play_list;
     }
 }
+
 
 
