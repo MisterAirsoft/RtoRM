@@ -1,5 +1,8 @@
 package RtoRMusic;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class Controller extends javax.swing.JFrame {
@@ -9,18 +12,14 @@ public class Controller extends javax.swing.JFrame {
 	@SuppressWarnings("unchecked")
 	
 	public static void main(String[] args) {
-		
-		FlatDarculaLaf.setup();
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+		Vue vu1 = new Vue() ;
+		vu1.extractAndDisplayAlbumArt("Music", 4, 50);
+	
+			
 
-			@Override
-			public void run() {
-			
-				new Controller().setVisible(true);
-				
-			}
-			
-		});
+	
+		;
 		
 	}
 }
