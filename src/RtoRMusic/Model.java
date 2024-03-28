@@ -51,7 +51,7 @@ public class Model {
         if (!searchResults.isEmpty()) {
             afficherResultatsRecherche(searchResults);
         } else {
-            JOptionPane.showMessageDialog(null, "Nous sommes désolés, nous n'avons pas trouvé ce que vous cherchez.");
+            JOptionPane.showMessageDialog(null, "Nous sommes désolés, nous n'avons pas trouvé ce que vous cherchez 😭 ", "Résultat", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -130,6 +130,4 @@ public class Model {
         JOptionPane.showMessageDialog(null, new JScrollPane(musicPanel), "Résultats de la recherche", JOptionPane.PLAIN_MESSAGE);
     }
 }
-
-
 
