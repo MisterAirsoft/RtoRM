@@ -14,23 +14,14 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.BorderLayout;
 
 public class Vue{
 
-    public static void main(String[] args) {
-        // Chemin vers le dossier contenant les fichiers audio
-        String folderPath = "Music";
-        // Nombre de colonnes dans la grille
-        int columns = 1;
-        // Taille des images des pochettes d'albums
-        int imageSize = 90;
-
-        // Extraire les pochettes d'albums et les afficher dans une grille
-        extractAndDisplayAlbumArt(folderPath, columns, imageSize);
-    }
-
-    private static void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
+   
+    public static void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
         JFrame frame = new JFrame("Album Art Gallery");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
