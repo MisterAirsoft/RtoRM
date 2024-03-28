@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,16 +19,41 @@ public class Vue {
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
     	 Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
         m = new Model();
-        JFrame frame = new JFrame("Album Art Gallery");
+        JFrame frame = new JFrame("RTR Musique 🎶 " );
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        Font titleFont = new Font("Helvetica Neue Light", Font.ITALIC, 30); // Choisir la police, le style et la taille
+        Font titleFont1 = new Font("Helvetica Neue Light", Font.ITALIC, 30);
       
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Barre de recherche
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchField = new JTextField(20);
+        searchField = new JTextField("Que souhaitez vouz écoutez ?",20);
+        searchField.setBackground(Color.white);
+        searchField.setFont(titleFont);
+        
         JButton searchButton = new JButton("Rechercher");
+        // Ajout d'un écouteur pour changer la couleur du bouton lorsque survolé
+        searchButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                searchButton.setBackground(new Color(156, 208, 241)); // Couleur de fond légèrement plus claire
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                searchButton.setBackground(Color.WHITE); // Retour à la couleur de fond normale
+            }
+        });
+
+        // Définition des marges pour le bouton
+        searchButton.setMargin(new Insets(5, 10, 5, 10)); 
+
+        searchButton.setBackground(Color.white);
+        searchButton.setFont(titleFont1);
+        Color titleColor1 = Color.black;
+        searchButton.setForeground(titleColor1);
+        
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,7 +61,7 @@ public class Vue {
                 if (!searchTerm.isEmpty()) {
                     m.rechercherMusique(searchTerm);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Veuillez entrer un terme de recherche.");
+                    
                 }
             }
         });
@@ -52,6 +79,7 @@ public class Vue {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setFont(titleFont);
     }
 
     void afficherMusiques(JPanel panel, TreeSet<Musique> musiques, int imageSize) {
@@ -83,4 +111,3 @@ public class Vue {
         panel.repaint(); // Redessiner le panneau
     }
 }
-
