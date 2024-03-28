@@ -13,6 +13,7 @@ public class Controller extends javax.swing.JFrame {
 	
 	public static void main(String[] args) {
 		Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+		FlatDarculaLaf.setup();
 		Vue vu1 = new Vue() ;
 		vu1.extractAndDisplayAlbumArt("Music", 4, 50);
 	
