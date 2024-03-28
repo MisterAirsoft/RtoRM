@@ -7,6 +7,8 @@ import org.jaudiotagger.tag.Tag;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -103,3 +105,4 @@ public class Vue{
         return extension.equals("mp3") || extension.equals("wav") || extension.equals("flac") || extension.equals("ogg");
     }
 }
+
