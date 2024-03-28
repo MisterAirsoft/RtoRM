@@ -1,16 +1,21 @@
 package RtoRMusic;
+import java.awt.GridLayout;
 import java.io.File;
 import java.util.Arrays;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 public class Model {
 	TreeSet<Musique> play_list;
 
     public static void main(String[] args) {
         // Désactiver les messages INFO de la bibliothèque jAudiotagger
-        Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+       
         String cheminDossier = "Music";
         NoeudMusique listeMusiques = construireListeMusiques(cheminDossier);
         afficherListeMusiques(listeMusiques);
@@ -40,6 +45,14 @@ public class Model {
             System.out.println("Le dossier spécifié n'existe pas ou ne contient aucun fichier.");
         }
         return tete;
+    }
+    public void rechercherMusique(String mot_clef) {
+        TreeSet<Musique> searchResults = Recherche(mot_clef);
+        if (!searchResults.isEmpty()) {
+            afficherResultatsRecherche(searchResults);
+        } else {
+            JOptionPane.showMessageDialog(null, "Nous sommes désolés, nous n'avons pas trouvé ce que vous cherchez.");
+        }
     }
 
     public static void afficherListeMusiques(NoeudMusique tete) {
@@ -109,6 +122,12 @@ public class Model {
     		}
     	}
     	return new_play_list;
+    }
+    private void afficherResultatsRecherche(TreeSet<Musique> searchResults) {
+        JPanel musicPanel = new JPanel(new GridLayout(0, 4, 10, 10)); // Utilisez le même layout que votre affichage principal
+        Vue vue = new Vue();
+        vue.afficherMusiques(musicPanel, searchResults, 50); // Utilisez la méthode d'affichage de la classe Vue
+        JOptionPane.showMessageDialog(null, new JScrollPane(musicPanel), "Résultats de la recherche", JOptionPane.PLAIN_MESSAGE);
     }
 }
 
