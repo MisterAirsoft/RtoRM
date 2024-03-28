@@ -8,7 +8,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.datatype.Artwork;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 
-public class Musique {
+public class Musique implements Comparable<Musique>{
 	public String source;
 	public String titre;
 	public String artist;
@@ -58,6 +58,10 @@ public class Musique {
 	    affichage.append("Langue : ").append(langue).append("\n");
 	    affichage.append("Commentaire : ").append(commentaire).append("\n");
 	    return affichage.toString();
+	}
+	public int compareTo(Musique m) {
+		// TODO Auto-generated method stub
+		return this.titre.compareTo(m.titre);
 	}
 
 

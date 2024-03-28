@@ -1,10 +1,13 @@
 package RtoRMusic;
 import java.io.File;
 import java.util.Arrays;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Model {
+	TreeSet<Musique> play_list;
+
     public static void main(String[] args) {
         // Désactiver les messages INFO de la bibliothèque jAudiotagger
         Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
@@ -50,6 +53,32 @@ public class Model {
 
     public static Musique creerMusique(String nomFichier) {
         return new Musique(nomFichier);
+    }
+    private static boolean isAudioFile(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+        return extension.equals("mp3") || extension.equals("wav") || extension.equals("flac") || extension.equals("ogg");
+    }
+    
+    public TreeSet<Musique> construire_play_list(String folderPath) {
+    	play_list = new TreeSet<Musique>();
+    	File folder = new File(folderPath);
+        File[] files = folder.listFiles();
+    	if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && isAudioFile(file.getName())) {
+                    try {
+                    	play_list.add(new Musique(file.getName()));
+                    	
+                       
+                       
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    	
+    	return play_list;
     }
 }
 
