@@ -22,13 +22,23 @@ import java.awt.BorderLayout;
 public class Vue{
 	Model m;
 	TreeSet<Musique> play_list ;
+	public JMenuBar createMenuBar() {
+		JMenuBar menuBar=new JMenuBar();
+		JMenuItem boutonPlaylistLike=new JMenuItem("Playlist aimée");
+		JMenuItem boutonPlaylistSuggestion=new JMenuItem("Suggestion");
+		JMenuItem boutonPlaylistRecherche=new JMenuItem("rechercher");
+		menuBar.add(boutonPlaylistLike);
+		menuBar.add(boutonPlaylistRecherche);
+		menuBar.add(boutonPlaylistSuggestion);
+		return menuBar;
+	}
 
    
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
     	m = new Model();
         JFrame frame = new JFrame("Album Art Gallery");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	frame.setJMenuBar( createMenuBar() );
         // Créer un panneau pour afficher les pochettes d'albums dans une grille
         JPanel panel = new JPanel(new GridLayout(0, columns, 10, 10)); // Ajouter des marges de 10 pixels
         
