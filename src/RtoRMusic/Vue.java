@@ -47,7 +47,7 @@ public class Vue {
         searchButton.addMouseListener(new MouseAdapter() {
 
             public void mouseEntered(MouseEvent evt) {
-                searchButton.setBackground(Color.gray); // Couleur de fond légèrement plus claire
+            	searchButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
             }
 
             public void mouseExited(MouseEvent evt) {
@@ -56,12 +56,46 @@ public class Vue {
         });
 
         // Définition des marges pour le bouton
-        searchButton.setMargin(new Insets(5, 10, 5, 10)); 
-        searchButton.setSize(250,50 );
+      
         searchButton.setBackground(Color.white);
         searchButton.setFont(titleFont1);
         Color titleColor1 = Color.black;
         searchButton.setForeground(titleColor1);
+        
+
+        JButton homeButton = new JButton("Accueil");
+        homeButton.setFont(titleFont1);
+        homeButton.setBackground(Color.white);
+        homeButton.setForeground(titleColor1);
+        
+        homeButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseEntered(MouseEvent evt) {
+            	homeButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+            }
+
+            public void mouseExited(MouseEvent evt) {
+            	homeButton.setBackground(Color.white); // Retour à la couleur de fond normale
+            }
+        });
+
+
+        JButton favoritesButton = new JButton("Favoris");
+        favoritesButton.setFont(titleFont1);
+        favoritesButton.setBackground(Color.white);
+        favoritesButton.setForeground(titleColor1);
+        
+        favoritesButton.addMouseListener(new MouseAdapter() {
+
+            public void mouseEntered(MouseEvent evt) {
+            	favoritesButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+            }
+
+            public void mouseExited(MouseEvent evt) {
+            	favoritesButton.setBackground(Color.white); // Retour à la couleur de fond normale
+            }
+        });
+        
         JPanel musicPanel = new JPanel(new GridLayout(0, columns, 5, 5));
         searchButton.addActionListener(new ActionListener() {
             @Override
@@ -74,9 +108,28 @@ public class Vue {
                 }
             }
         });
+        // Ajouter des actions aux boutons
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	
+                // Action à exécuter lors du clic sur le bouton Accueil
+                // Vous pouvez implémenter cette action ici
+            }
+        });
+
+        favoritesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action à exécuter lors du clic sur le bouton Favoris
+                // Vous pouvez implémenter cette action ici
+            }
+        });
 
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
+        searchPanel.add(homeButton); // Ajouter le bouton Accueil
+        searchPanel.add(favoritesButton); // Ajouter le bouton Favoris
         mainPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Affichage de la liste de musiques
@@ -133,3 +186,4 @@ public class Vue {
     	    panel.repaint(); // Redessiner le panneau
     	}
 }
+
