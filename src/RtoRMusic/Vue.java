@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class Vue {
     private Model m;
-    private TreeSet<Musique> play_list;
+    private TreeMap<String, Musique> play_list;
     private JTextField searchField;
 
     
@@ -92,10 +92,11 @@ public class Vue {
         frame.setFont(titleFont);
     }
 
-    	void afficherMusiques(JPanel panel, TreeSet<Musique> musiques, int imageSize, String searchTerm) {
+    	void afficherMusiques(JPanel panel, TreeMap<String,Musique> musiques, int imageSize, String searchTerm) {
     	    panel.removeAll(); // Nettoyer le panneau
     	    
-    	    for (Musique musique : musiques) {
+    	    for (Map.Entry<String, Musique> entry : musiques.entrySet()) {
+    	    	Musique musique = entry.getValue();
     	        // Vérifier si la musique correspond au terme de recherche
     	        if (musique.titre.toLowerCase().contains(searchTerm.toLowerCase()) ||
     	            musique.artist.toLowerCase().contains(searchTerm.toLowerCase()) ||

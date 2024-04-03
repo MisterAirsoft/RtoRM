@@ -11,7 +11,7 @@ public class Controller extends javax.swing.JFrame {
 		
 		FlatDarculaLaf.setup();
 		Vue vu1 = new Vue() ;
-		vu1.extractAndDisplayAlbumArt("Music", 4, 50);
+		vu1.extractAndDisplayAlbumArt("Music", 1, 50);
 
 		;
 		
