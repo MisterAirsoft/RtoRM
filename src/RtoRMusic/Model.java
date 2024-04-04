@@ -98,7 +98,7 @@ public class Model {
     private void afficherResultatsRecherche(TreeMap<String,Musique> searchResults) {
         JPanel musicPanel = new JPanel(new GridLayout(0, 4, 10, 10)); // Utilisez le même layout que votre affichage principal
         Vue vue = new Vue();
-        vue.afficherMusiques(musicPanel, searchResults, 50,""); // Utilisez la méthode d'affichage de la classe Vue
+        vue.afficherMusiques(musicPanel, searchResults, 0, ""); // Utilisez la méthode d'affichage de la classe Vue
         JOptionPane.showMessageDialog(null, new JScrollPane(musicPanel), "Résultats de la recherche", JOptionPane.PLAIN_MESSAGE);
     }
     
