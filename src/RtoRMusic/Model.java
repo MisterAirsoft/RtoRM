@@ -14,7 +14,8 @@ import javax.swing.JScrollPane;
 
 public class Model {
     TreeMap<String, Musique> play_list = new TreeMap<>();
-
+    TreeMap<String,TreeSet<String>> listeAlbumParArtiste=new TreeMap<>();
+    TreeMap<String,TreeSet<Musique>> listeMusiqueParAlbum=new TreeMap<>();
 
 
 
@@ -26,7 +27,7 @@ public class Model {
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
         return extension.equals("mp3") || extension.equals("wav") || extension.equals("flac") || extension.equals("ogg");
     }
-    
+ 
     public TreeMap<String, Musique> construire_play_list(String folderPath) {
     	play_list = new TreeMap<String , Musique>();
     	File folder = new File(folderPath);
@@ -38,7 +39,31 @@ public class Model {
                     	Musique musique =  new Musique(file.getName());
                     	play_list.put(musique.titre, musique);
                     	
+                      	for(String artist : musique.artist.split("/")) {
+                    
+                    		if (listeAlbumParArtiste.containsKey(artist)&&(listeAlbumParArtiste.get(musique.artist).last()!=musique.album)) {
+                        		listeAlbumParArtiste.get(artist).add(musique.album);
+                        	}
+                        	else if((listeAlbumParArtiste.containsValue(musique.album))==false) {
+                        		
+                        		TreeSet<String> listeAlbum=new TreeSet<>();
+                        		listeAlbum.add(musique.album);
+                        		listeAlbumParArtiste.put(artist,listeAlbum);
+                        		
+                        	}
+                        	
+                    	}
                     	
+                      	if (listeMusiqueParAlbum.containsKey(musique.album)&&(listeMusiqueParAlbum.get(musique.album).last()!=musique)) {
+                    		listeMusiqueParAlbum.get(musique.album).add(musique);
+                    	}
+                    	else if((listeMusiqueParAlbum.containsValue(musique))==false) {
+                    		
+                    		TreeSet<Musique> listeMusique=new TreeSet<>();
+                    		listeMusique.add(musique);
+                    		listeMusiqueParAlbum.put(musique.album,listeMusique);
+                    		
+                    	}
                        
                        
                     } catch (Exception e) {
@@ -47,7 +72,7 @@ public class Model {
                 }
             }
         }
-    	
+    	System.out.println(listeMusiqueParAlbum);
     	return play_list;
     	}
     
@@ -86,4 +111,3 @@ public class Model {
         }
     }
 }
-
