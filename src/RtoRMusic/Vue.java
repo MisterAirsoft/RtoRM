@@ -114,6 +114,7 @@ public class Vue {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Action to perform when Favorites button is clicked
+            	afficherMusiques(musicPanel, m.musique_aimer, imageSize, "");
             }
         });
         buttonPanel.add(favoritesButton);

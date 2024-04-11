@@ -1,6 +1,10 @@
 package RtoRMusic;
 import java.awt.GridLayout;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.security.KeyStore.Entry;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,8 +20,8 @@ public class Model {
     TreeMap<String, Musique> play_list = new TreeMap<>();
     TreeMap<String,TreeSet<String>> listeAlbumParArtiste=new TreeMap<>();
     TreeMap<String,TreeSet<Musique>> listeMusiqueParAlbum=new TreeMap<>();
-
-
+    TreeMap<String, Musique> musique_aimer = new TreeMap<>(); //contient l'ensemble des musiques aimer par l'utilisateur
+    String utilisateur = "userpostgres"; //utilisateur par defaut
 
 
     public static Musique creerMusique(String nomFichier) {
@@ -29,22 +33,36 @@ public class Model {
     }
  
     public TreeMap<String, Musique> construire_play_list(String folderPath) {
-    	play_list = new TreeMap<String , Musique>();
-    	File folder = new File(folderPath);
+    	play_list = new TreeMap<String , Musique>(); //créer une play_list vide
+    	listeAlbumParArtiste = new TreeMap<String,TreeSet<String>>();
+    	listeMusiqueParAlbum = new TreeMap<String,TreeSet<Musique>>();
+    	
+    	File folder = new File(folderPath);//récupère les fichiers
         File[] files = folder.listFiles();
+        
     	if (files != null) {
-            for (File file : files) {
+            for (File file : files) {//parcour l'enssemble des fichier du dossier
                 if (file.isFile() && isAudioFile(file.getName())) {
                     try {
                     	Musique musique =  new Musique(file.getName());
-                    	play_list.put(musique.titre, musique);
+                    	play_list.put(normalisation_text(musique.titre + musique.artist.split("/")[0]), musique);
+						System.out.println(file);
+						if (file.getName().compareTo(
+								normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3") != 0) {
+
+							file.renameTo(new File("Music\\"
+									+ normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3"));
+						}
                     	
                       	for(String artist : musique.artist.split("/")) {
                     
-                    		if (listeAlbumParArtiste.containsKey(artist)&&(listeAlbumParArtiste.get(musique.artist).last()!=musique.album)) {
-                        		listeAlbumParArtiste.get(artist).add(musique.album);
+                    		if (listeAlbumParArtiste.containsKey(artist)) {
+                    			 if (!(listeAlbumParArtiste.get(artist).contains(musique.album))) {
+                    				 listeAlbumParArtiste.get(artist).add(musique.album);
+                    			 }
+                        		
                         	}
-                        	else if((listeAlbumParArtiste.containsValue(musique.album))==false) {
+                        	else {
                         		
                         		TreeSet<String> listeAlbum=new TreeSet<>();
                         		listeAlbum.add(musique.album);
@@ -71,6 +89,31 @@ public class Model {
                     }
                 }
             }
+            try {
+            	/*Permet de récupéré la liste des musique aimes par l'utilisateur*/
+				// Création d'un fileReader pour lire le fichier
+				FileReader fileReader = new FileReader("Utilisateur/" + utilisateur);
+
+				// Création d'un bufferedReader qui utilise le fileReader
+				BufferedReader reader = new BufferedReader(fileReader);
+
+				// une fonction à essayer pouvant générer une erreur
+				reader.readLine();//la première ligne contient le mot de passe
+				String line = reader.readLine();
+
+				while ((line != null) && (line.length() >= 1)) {
+					System.out.println(line);
+				
+					play_list.get(line).aimer = true;
+					musique_aimer.put(line, play_list.get(line));
+					// affichage de la ligne
+					// lecture de la prochaine ligne
+					line = reader.readLine();
+				}
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     	System.out.println(listeMusiqueParAlbum);
     	return play_list;
@@ -110,4 +153,114 @@ public class Model {
             JOptionPane.showMessageDialog(null, "Nous sommes désolés, nous n'avons pas trouvé ce que vous cherchez 😭 ", "Résultat", JOptionPane.PLAIN_MESSAGE);
         }
     }
+    
+    public String recommander() {
+    	/*Permet de récupéré les 5 artistes préféré d'un utilisateur en fonction de ses titre aimer*/
+    	
+		String recomandation = ""; // variable de fin qui indiquera les préférences de l'utilisateur
+		TreeMap<String, Integer> tags_aimer = new TreeMap<>();//contiendra les différente catégorie aimer
+		
+		for (String musique_id : musique_aimer.keySet()) {//récupère tout les titres aimer et les comptes
+			
+			Musique musique = play_list.get(musique_id);
+			for (String artist: musique.artist.split("/")) {
+				if (tags_aimer.containsKey(artist)) {
+				tags_aimer.replace(artist, tags_aimer.get(artist) + 1);
+
+			} else {
+				tags_aimer.put(artist, 1);
+			}
+			}
+			
+		}
+		
+
+		TreeSet<couple_trie_aimer> list = new TreeSet<couple_trie_aimer>();//trie chaqu'une des valeur pour trouver les meilleurs
+		for (java.util.Map.Entry<String, Integer> values : tags_aimer.entrySet()) {
+			
+			list.add(new couple_trie_aimer(values.getKey(),values.getValue()));
+			
+			
+		}
+		
+		
+		int i = 0;
+		while ((i < 5) && (i < list.size())) {
+			recomandation += list.pollFirst() + " ";
+			i+=1;
+		}
+	
+		return recomandation;
+	}
+    
+    public String normalisation_text(String mot) {
+    	/*Permet de transformer un titre de munique avec des caractère spétiaux en titre de musique normal*/
+	
+		String nmot = "";
+		for (char letre : mot.toCharArray()) {
+			nmot += convert(letre);
+
+		}
+		return nmot;
+
+	}
+    public static char convert(char c) {
+    	/*Permet de convertir un caractère spétiaux en caractère normal*/
+		String s = c + "";
+
+		if (s.compareTo("’") == 0) {
+			return ' ';
+		}
+
+		if (c >= 97 && c <= 122) {
+			return c;
+		} else if (c >= 65 && c <= 90) {
+			return c;
+		} else if (c >= 43 && c <= 57) {
+			return c;
+		} else if (c == 32 || c == 39 || c == 40 || c == 41 || c == 58 || c == 63) {
+			return c;
+		} else {
+			switch (c) {
+			case 'À':
+			case 'Á':
+			case 'Â':
+				return 'A';
+			case 'Ç':
+				return 'C';
+			case 'È':
+			case 'É':
+			case 'Ê':
+			case 'Ë':
+				return 'E';
+			case 'â':
+			case 'à':
+			case 'ä':
+				return 'a';
+			case 'ç':
+				return 'c';
+			case 'ê':
+			case 'è':
+			case 'é':
+			case 'ë':
+				return 'e';
+			case 'ï':
+			case 'î':
+				return 'i';
+			case 'ò':
+			case 'ó':
+			case 'ô':
+			case 'ö':
+				return 'o';
+			case 'û':
+			case 'ü':
+			case 'ù':
+				return 'u';
+			case '’':
+				return ' ';
+			default:
+				return '?';
+			}
+		}
+	}
 }
