@@ -139,6 +139,7 @@ public class Vue {
 
         for (Map.Entry<String, Musique> entry : musiques.entrySet()) {
             Musique musique = entry.getValue();
+            
             if (musique.titre.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.artist.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.album.toLowerCase().contains(searchTerm.toLowerCase()) ||
@@ -153,14 +154,42 @@ public class Vue {
                 JLabel genreLabel = new JLabel("Album: " + musique.genre);
                 JLabel albumLabel = new JLabel("Album: " + musique.album);
 
+                JButton favButton = new JButton("❤️");
+             // Mettre le bouton en rouge si la musique est en favori
+                if (musique.aimer) {
+                    favButton.setForeground(Color.RED);
+                } else {
+                    favButton.setForeground(Color.WHITE);
+                }
+                favButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Inverser l'état de la musique comme favori
+                        musique.aimer = !musique.aimer;
+
+                        // Changer la couleur du bouton cœur en fonction de l'état de la musique
+                        if (musique.aimer) {
+                            favButton.setForeground(Color.RED); // Bouton rouge si la musique est en favori
+                           
+                        } else {
+                            favButton.setForeground(Color.WHITE); // Bouton noir si la musique n'est pas en favori
+                            
+                        }
+                        
+                    }
+                });
+
+
+                
                 JPanel itemPanel = new JPanel(new BorderLayout());
 
                 itemPanel.add(imageLabel, BorderLayout.WEST);
 
-                JPanel textPanel = new JPanel(new GridLayout(3, 1));
+                JPanel textPanel = new JPanel(new GridLayout(4, 1));
                 textPanel.add(titleLabel);
                 textPanel.add(artistLabel);
                 textPanel.add(albumLabel);
+                textPanel.add(favButton); // Ajout du bouton cœur
                 itemPanel.add(textPanel, BorderLayout.CENTER);
 
                 panel.add(itemPanel);
@@ -179,4 +208,6 @@ public class Vue {
         }
     }
 }
+
+
 
