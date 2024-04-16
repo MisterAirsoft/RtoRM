@@ -166,6 +166,8 @@ public class Vue {
                     public void actionPerformed(ActionEvent e) {
                         // Inverser l'état de la musique comme favori
                         musique.aimer = !musique.aimer;
+                        m.modifier_list_musique_aimer(musique);
+                       
 
                         // Changer la couleur du bouton cœur en fonction de l'état de la musique
                         if (musique.aimer) {
@@ -176,7 +178,9 @@ public class Vue {
                             
                         }
                         
+                        
                     }
+                    
                 });
 
 
@@ -207,6 +211,8 @@ public class Vue {
             afficherMusiques(musicPanel, play_list, imageSize, "");
         }
     }
+    
+    
 }
 
 

@@ -2,8 +2,11 @@ package RtoRMusic;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyStore.Entry;
 import java.util.Arrays;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class Model {
     TreeMap<String,TreeSet<Musique>> listeMusiqueParAlbum=new TreeMap<>();
     TreeMap<String, Musique> musique_aimer = new TreeMap<>(); //contient l'ensemble des musiques aimer par l'utilisateur
     String utilisateur = "userpostgres"; //utilisateur par defaut
+    String mot_de_passe="userpostgres";//mot de passe de l'utilisateur
 
 
     public static Musique creerMusique(String nomFichier) {
@@ -89,16 +93,20 @@ public class Model {
                     }
                 }
             }
+            
+            
             try {
             	/*Permet de récupéré la liste des musique aimes par l'utilisateur*/
 				// Création d'un fileReader pour lire le fichier
+            	
+  
 				FileReader fileReader = new FileReader("Utilisateur/" + utilisateur);
 
 				// Création d'un bufferedReader qui utilise le fileReader
 				BufferedReader reader = new BufferedReader(fileReader);
 
 				// une fonction à essayer pouvant générer une erreur
-				reader.readLine();//la première ligne contient le mot de passe
+				mot_de_passe= reader.readLine();//la première ligne contient le mot de passe
 				String line = reader.readLine();
 
 				while ((line != null) && (line.length() >= 1)) {
@@ -192,6 +200,34 @@ public class Model {
 	
 		return recomandation;
 	}
+    
+    public void modifier_list_musique_aimer(Musique musique)  {
+    	/*Permet de modifier la list : musique_aimer en fonction de la musique envoyer*/
+    	if (musique.aimer) {
+    		musique_aimer.put(normalisation_text(musique.titre + musique.artist.split("/")[0]), musique);
+    	}
+    	else {
+    		musique_aimer.remove(normalisation_text(musique.titre + musique.artist.split("/")[0]));
+    	}
+    	try {
+    		/*modifie le fichier de l'utilisateur*/
+    		PrintWriter writer = new PrintWriter("Utilisateur/"+utilisateur, "UTF-8");
+        	writer.println(mot_de_passe);
+        	for (String clef : musique_aimer.keySet()) {
+        		writer.println(clef);
+        	}
+        
+        	writer.close();
+    		
+    	} catch (Exception e) {
+            e.printStackTrace();
+        }
+    		
+    	}
+    	
+    	
+    	
+
     
     public String normalisation_text(String mot) {
     	/*Permet de transformer un titre de munique avec des caractère spétiaux en titre de musique normal*/
