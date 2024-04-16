@@ -21,14 +21,26 @@ public class Vue {
         JFrame frame = new JFrame("RTR Musique 🎶 ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         Font titleFont = new Font("Helvetica Neue Light", Font.ITALIC, 30);
         Font titleFont1 = new Font("Liberation Sans", Font.BOLD, 30);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
 
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1)); // New panel for buttons
-        buttonPanel.setBackground(Color.white);
+        // Créer un nouveau JPanel pour les boutons et utiliser GridBagLayout pour qu'ils prennent toute la hauteur de la page
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setBackground(Color.BLACK); // Définir la couleur de fond du panneau des boutons
 
+        // Créer un objet GridBagConstraints pour configurer le positionnement et le dimensionnement des composants dans GridBagLayout
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.VERTICAL; // Remplissage vertical
+        gbc.gridx = 0; // Positionnement sur la colonne 0
+        gbc.gridy = 0; // Positionnement sur la ligne 0
+        gbc.anchor = GridBagConstraints.NORTH; // Ancrage au nord (haut)
+        
+        
+        
         JButton searchButton = new JButton(" 🔍 Rechercher");
         searchButton.setFont(titleFont1);
         searchButton.setBackground(Color.black);
@@ -36,6 +48,7 @@ public class Vue {
         searchButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 searchButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+                
             }
 
             public void mouseExited(MouseEvent evt) {
@@ -73,6 +86,10 @@ public class Vue {
                 mainPanel.repaint();
             }
         });
+     // Définir une largeur préférée pour tous les boutons
+        int preferredButtonWidth = 400; // Largeur préférée en pixels
+        searchButton.setPreferredSize(new Dimension(preferredButtonWidth, searchButton.getPreferredSize().height));
+        buttonPanel.add(searchButton, gbc);
         buttonPanel.add(searchButton);
 
         JButton homeButton = new JButton("🏠 Accueil");
@@ -95,6 +112,8 @@ public class Vue {
             	afficherMusiques(musicPanel, play_list, imageSize, "");
             }
         });
+        homeButton.setPreferredSize(new Dimension(preferredButtonWidth, homeButton.getPreferredSize().height));
+        buttonPanel.add(homeButton, gbc);
         buttonPanel.add(homeButton);
 
         JButton favoritesButton = new JButton(" ❤️ Favoris");
@@ -117,7 +136,34 @@ public class Vue {
             	afficherMusiques(musicPanel, m.musique_aimer, imageSize, "");
             }
         });
+        favoritesButton.setPreferredSize(new Dimension(preferredButtonWidth, favoritesButton.getPreferredSize().height));
+        buttonPanel.add(favoritesButton, gbc);
         buttonPanel.add(favoritesButton);
+        
+        JButton recommendationButton = new JButton("🎵 Recommandation");
+        recommendationButton.setFont(titleFont1);
+        recommendationButton.setBackground(Color.black);
+        recommendationButton.setForeground(Color.white);
+        recommendationButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                recommendationButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                recommendationButton.setBackground(Color.black); // Retour à la couleur de fond normale
+            }
+        });
+        recommendationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action à effectuer lorsque le bouton de recommandation est cliqué
+               
+            }
+        });
+        recommendationButton.setPreferredSize(new Dimension(preferredButtonWidth,  recommendationButton.getPreferredSize().height));
+        buttonPanel.add( recommendationButton, gbc);
+        buttonPanel.add(recommendationButton);
+
 
         mainPanel.add(buttonPanel, BorderLayout.WEST);
 
@@ -126,6 +172,17 @@ public class Vue {
         play_list = m.construire_play_list(folderPath);
         afficherMusiques(musicPanel, play_list, imageSize, "");
         mainPanel.add(new JScrollPane(musicPanel), BorderLayout.CENTER);
+        
+     // Ajouter les boutons au panneau des boutons
+        buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
+        gbc.gridy++; // Passer à la ligne suivante
+        buttonPanel.add(homeButton, gbc); // Ajouter le bouton d'accueil
+        gbc.gridy++; // Passer à la ligne suivante
+        buttonPanel.add(favoritesButton, gbc); // Ajouter le bouton de favoris
+        gbc.gridy++; // Passer à la ligne suivante
+        buttonPanel.add(recommendationButton, gbc); // Ajouter le bouton de recommandation
+
+        mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
 
         frame.getContentPane().add(mainPanel);
         frame.pack();
@@ -214,6 +271,8 @@ public class Vue {
     
     
 }
+
+
 
 
 
