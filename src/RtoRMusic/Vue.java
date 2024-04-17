@@ -1,6 +1,9 @@
 package RtoRMusic;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicBorders.SplitPaneBorder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -175,7 +178,6 @@ public class Vue {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Action à effectuer lorsque le bouton de recommandation est cliqué
-            	afficherMusiques(musicPanel, m.RechercheRecommendation(), imageSize, "");
                
             }
         });
@@ -221,7 +223,7 @@ public class Vue {
                     musique.album.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.genre.toLowerCase().contains(searchTerm.toLowerCase())) {
                 ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
-                Image resizedImage = imageIcon.getImage().getScaledInstance(imageSize, imageSize, Image.SCALE_SMOOTH);
+                Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                 JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
                 imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -231,6 +233,7 @@ public class Vue {
                 JLabel albumLabel = new JLabel("Album: " + musique.album);
 
                 JButton favButton = new JButton("❤️");
+                favButton.setSize(100, 100);
              // Mettre le bouton en rouge si la musique est en favori
                 if (musique.aimer) {
                     favButton.setForeground(Color.RED);
@@ -262,16 +265,20 @@ public class Vue {
 
                 
                 JPanel itemPanel = new JPanel(new BorderLayout());
+                
 
                 itemPanel.add(imageLabel, BorderLayout.WEST);
-
-                JPanel textPanel = new JPanel(new GridLayout(4, 1));
+                
+                JPanel textPanel = new JPanel(new GridLayout(1, 1));
                 textPanel.add(titleLabel);
                 textPanel.add(artistLabel);
                 textPanel.add(albumLabel);
-                textPanel.add(favButton); // Ajout du bouton cœur
+                textPanel.add(favButton);
+               
                 itemPanel.add(textPanel, BorderLayout.CENTER);
-
+                
+                
+                
                 panel.add(itemPanel);
             }
         }
