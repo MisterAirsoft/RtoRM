@@ -62,6 +62,7 @@ public class Vue {
                 JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 searchField = new JTextField("Que souhaitez-vous écouter ?", 20);
                 searchField.setBackground(Color.white);
+                searchField.setForeground(Color.gray);
                 searchField.setFont(titleFont);
                 searchField.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent evt) {
