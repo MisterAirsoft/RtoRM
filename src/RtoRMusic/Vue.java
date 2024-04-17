@@ -62,6 +62,7 @@ public class Vue {
                 JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 searchField = new JTextField("Que souhaitez-vous écouter ?", 20);
                 searchField.setBackground(Color.white);
+                searchField.setForeground(Color.gray);
                 searchField.setFont(titleFont);
                 searchField.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent evt) {
@@ -69,11 +70,28 @@ public class Vue {
                         searchField.setForeground(Color.black);
                     }
                 });
-                searchField.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+                searchField.addKeyListener(new KeyListener() {
+                    public void keyPressed(KeyEvent e){
+                    	if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                         performSearch();
+                    	}
+                        
                     }
+
+					@Override
+					public void keyTyped(KeyEvent e) {
+						// TODO Auto-generated method stub
+						
+						
+					}
+
+					@Override
+					public void keyReleased(KeyEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					
                 });
                 searchPanel.add(searchField);
                 mainPanel.add(searchPanel, BorderLayout.NORTH);
@@ -156,8 +174,7 @@ public class Vue {
         recommendationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	
-            	
+                // Action à effectuer lorsque le bouton de recommandation est cliqué
             	afficherMusiques(musicPanel, m.RechercheRecommendation(), imageSize, "");
                
             }
@@ -273,8 +290,3 @@ public class Vue {
     
     
 }
-
-
-
-
-
