@@ -30,9 +30,9 @@ public class Vue {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
-
         // Créer un nouveau JPanel pour les boutons et utiliser GridBagLayout pour qu'ils prennent toute la hauteur de la page
         JPanel buttonPanel = new JPanel(new GridBagLayout());
+
         buttonPanel.setBackground(Color.BLACK); // Définir la couleur de fond du panneau des boutons
 
         // Créer un objet GridBagConstraints pour configurer le positionnement et le dimensionnement des composants dans GridBagLayout
@@ -41,7 +41,6 @@ public class Vue {
         gbc.gridx = 0; // Positionnement sur la colonne 0
         gbc.gridy = 0; // Positionnement sur la ligne 0
         gbc.anchor = GridBagConstraints.NORTH; // Ancrage au nord (haut)
-        
         
         
         JButton searchButton = new JButton(" 🔍 Rechercher");
@@ -177,7 +176,7 @@ public class Vue {
         recommendationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Action à effectuer lorsque le bouton de recommandation est cliqué
+            	afficherMusiques(musicPanel, m.RechercheRecommendation(), imageSize, "");
                
             }
         });
@@ -217,24 +216,30 @@ public class Vue {
 
         for (Map.Entry<String, Musique> entry : musiques.entrySet()) {
             Musique musique = entry.getValue();
-            
+
             if (musique.titre.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.artist.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.album.toLowerCase().contains(searchTerm.toLowerCase()) ||
                     musique.genre.toLowerCase().contains(searchTerm.toLowerCase())) {
+
                 ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
                 Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                 JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
                 imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+                // Utilisation de JPanel pour organiser les informations de manière flexible
+                JPanel infoPanel = new JPanel(new BorderLayout());
+
+                // Labels pour les informations de la musique
                 JLabel titleLabel = new JLabel("Title: " + musique.titre);
                 JLabel artistLabel = new JLabel("Artist: " + musique.artist);
-                JLabel genreLabel = new JLabel("Album: " + musique.genre);
                 JLabel albumLabel = new JLabel("Album: " + musique.album);
 
+                // Bouton "like" (favori)
                 JButton favButton = new JButton("❤️");
-                favButton.setSize(100, 100);
-             // Mettre le bouton en rouge si la musique est en favori
+                favButton.setSize(50, 50); // Définir une taille plus petite si nécessaire
+
+                // Mettre le bouton en rouge si la musique est en favori
                 if (musique.aimer) {
                     favButton.setForeground(Color.RED);
                 } else {
@@ -246,54 +251,34 @@ public class Vue {
                         // Inverser l'état de la musique comme favori
                         musique.aimer = !musique.aimer;
                         m.modifier_list_musique_aimer(musique);
-                       
 
                         // Changer la couleur du bouton cœur en fonction de l'état de la musique
                         if (musique.aimer) {
                             favButton.setForeground(Color.RED); // Bouton rouge si la musique est en favori
-                           
                         } else {
-                            favButton.setForeground(Color.WHITE); // Bouton noir si la musique n'est pas en favori
-                            
+                            favButton.setForeground(Color.WHITE); // Bouton blanc si la musique n'est pas en favori
                         }
-                        
-                        
                     }
-                    
                 });
 
+                // Ajouter les composants au panel d'informations
+                infoPanel.add(titleLabel, BorderLayout.NORTH);
+                infoPanel.add(artistLabel, BorderLayout.CENTER);
+                infoPanel.add(albumLabel, BorderLayout.SOUTH);
+                infoPanel.add(favButton, BorderLayout.EAST);
 
-                
+                // Utilisation d'un layout flexible pour organiser l'image et les informations
                 JPanel itemPanel = new JPanel(new BorderLayout());
-                
-
                 itemPanel.add(imageLabel, BorderLayout.WEST);
-                
-                JPanel textPanel = new JPanel(new GridLayout(1, 1));
-                textPanel.add(titleLabel);
-                textPanel.add(artistLabel);
-                textPanel.add(albumLabel);
-                textPanel.add(favButton);
-               
-                itemPanel.add(textPanel, BorderLayout.CENTER);
-                
-                
-                
+                itemPanel.add(infoPanel, BorderLayout.CENTER);
+
+                // Ajouter le panel d'élément à votre panel principal
                 panel.add(itemPanel);
             }
         }
+
+        // Rafraîchir et redessiner le panel principal
         panel.revalidate();
         panel.repaint();
     }
-
-    private void performSearch() {
-        String searchTerm = searchField.getText();
-        if (!searchTerm.isEmpty()) {
-            afficherMusiques(musicPanel, play_list, imageSize, searchTerm);
-        } else {
-            afficherMusiques(musicPanel, play_list, imageSize, "");
-        }
-    }
-    
-    
 }
