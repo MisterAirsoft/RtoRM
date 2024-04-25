@@ -43,7 +43,7 @@ public class Vue {
         gbc.anchor = GridBagConstraints.NORTH; // Ancrage au nord (haut)
         
         
-        JButton searchButton = new JButton(" 🔍 Rechercher");
+        JButton searchButton = new JButton(" ✈ Explorer ");
         searchButton.setFont(titleFont1);
         searchButton.setBackground(Color.black);
         searchButton.setForeground(Color.white);
@@ -112,7 +112,7 @@ public class Vue {
         buttonPanel.add(searchButton, gbc);
         buttonPanel.add(searchButton);
 
-        JButton homeButton = new JButton("🏠 Accueil");
+        JButton homeButton = new JButton(" ⛺ Accueil");
         homeButton.setFont(titleFont1);
         homeButton.setBackground(Color.black);
         homeButton.setForeground(Color.white);
@@ -160,7 +160,7 @@ public class Vue {
         buttonPanel.add(favoritesButton, gbc);
         buttonPanel.add(favoritesButton);
         
-        JButton recommendationButton = new JButton("🎵 Recommandation");
+        JButton recommendationButton = new JButton("♬ Suggestion ");
         recommendationButton.setFont(titleFont1);
         recommendationButton.setBackground(Color.black);
         recommendationButton.setForeground(Color.white);
