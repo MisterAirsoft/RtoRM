@@ -227,14 +227,14 @@ public class Vue {
                 JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
                 imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-                // Utilisation de JPanel pour organiser les informations de manière flexible
-                JPanel infoPanel = new JPanel(new BorderLayout());
+                // Utilisation de JPanel pour organiser les informations cote a cote 
+                JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    	
 
                 // Labels pour les informations de la musique
                 JLabel titleLabel = new JLabel("Title: " + musique.titre);
                 JLabel artistLabel = new JLabel("Artist: " + musique.artist);
                 JLabel albumLabel = new JLabel("Album: " + musique.album);
-
+                
                 // Bouton "like" (favori)
                 JButton favButton = new JButton("❤️");
                 favButton.setSize(50, 50); // Définir une taille plus petite si nécessaire
@@ -260,17 +260,22 @@ public class Vue {
                         }
                     }
                 });
-
+             // Ajout de bordures entre les labels (utilisation de EmptyBorder)
+                int borderSize = 5; // Taille de la bordure
+                titleLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, borderSize)); // Bordure à droite du titre
+                artistLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, borderSize)); // Bordure à gauche et droite de l'artiste
+                albumLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, 0)); // Bordure à gauche de l'album
                 // Ajouter les composants au panel d'informations
-                infoPanel.add(titleLabel, BorderLayout.NORTH);
+                infoPanel.add(titleLabel, BorderLayout.WEST);
                 infoPanel.add(artistLabel, BorderLayout.CENTER);
-                infoPanel.add(albumLabel, BorderLayout.SOUTH);
-                infoPanel.add(favButton, BorderLayout.EAST);
-
+                infoPanel.add(albumLabel, BorderLayout.EAST);
+                
                 // Utilisation d'un layout flexible pour organiser l'image et les informations
                 JPanel itemPanel = new JPanel(new BorderLayout());
                 itemPanel.add(imageLabel, BorderLayout.WEST);
                 itemPanel.add(infoPanel, BorderLayout.CENTER);
+                
+                itemPanel.add(favButton, BorderLayout.EAST);
 
                 // Ajouter le panel d'élément à votre panel principal
                 panel.add(itemPanel);
