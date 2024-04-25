@@ -57,7 +57,7 @@ public class Model {
 						if (file.getName().compareTo(
 								normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3") != 0) {
 
-							file.renameTo(new File("Music\\"
+							file.renameTo(new File("Music/"
 									+ normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3"));
 						}
 
