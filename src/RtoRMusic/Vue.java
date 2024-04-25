@@ -281,4 +281,12 @@ public class Vue {
         panel.revalidate();
         panel.repaint();
     }
+    private void performSearch() {
+        String searchTerm = searchField.getText();
+        if (!searchTerm.isEmpty()) {
+            afficherMusiques(musicPanel, play_list, imageSize, searchTerm);
+        } else {
+            afficherMusiques(musicPanel, play_list, imageSize, "");
+        }
+    }
 }
