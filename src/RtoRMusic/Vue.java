@@ -183,6 +183,30 @@ public class Vue {
         recommendationButton.setPreferredSize(new Dimension(preferredButtonWidth,  recommendationButton.getPreferredSize().height));
         buttonPanel.add( recommendationButton, gbc);
         buttonPanel.add(recommendationButton);
+        
+        JButton userButton = new JButton("👤 Utilisateur");
+        userButton.setFont(titleFont1);
+        userButton.setBackground(Color.black);
+        userButton.setForeground(Color.white);
+        userButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                userButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                userButton.setBackground(Color.black); // Retour à la couleur de fond normale
+            }
+        });
+        userButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action à effectuer lorsque le bouton utilisateur est cliqué
+                // Par exemple, afficher une boîte de dialogue pour la gestion de l'utilisateur
+                JOptionPane.showMessageDialog(frame, "Gérer l'utilisateur");
+            }
+        });
+     
+
 
 
         mainPanel.add(buttonPanel, BorderLayout.WEST);
@@ -200,7 +224,19 @@ public class Vue {
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(favoritesButton, gbc); // Ajouter le bouton de favoris
         gbc.gridy++; // Passer à la ligne suivante
-        buttonPanel.add(recommendationButton, gbc); // Ajouter le bouton de recommandation
+        
+     // Ajoutez le bouton de suggestion avec un espace spécifique après les autres boutons
+
+        userButton.setPreferredSize(new Dimension(preferredButtonWidth, userButton.getPreferredSize().height));
+        buttonPanel.add(recommendationButton, gbc); // Ajoutez le bouton de suggestion
+  
+       
+        gbc.gridy++; // Passez à la ligne suivante
+
+        // Ajoutez le bouton utilisateur avec un espace spécifique après le bouton de suggestion
+        gbc.insets = new Insets(100, 0, 100, 0); // Appliquez des marges après le bouton de suggestion
+        buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
+        
 
         mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
 
@@ -295,3 +331,4 @@ public class Vue {
         }
     }
 }
+
