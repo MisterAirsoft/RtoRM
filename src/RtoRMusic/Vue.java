@@ -26,7 +26,7 @@ public class Vue {
 
 
         Font titleFont = new Font("Helvetica Neue Light", Font.ITALIC, 30);
-        Font titleFont1 = new Font("Liberation Sans", Font.BOLD, 30);
+        Font titleFont1 = new Font("Helvetica Neue Light", Font.BOLD, 30);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
