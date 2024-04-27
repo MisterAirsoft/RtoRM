@@ -57,6 +57,7 @@ public class Vue {
                 searchButton.setBackground(Color.black); // Retour à la couleur de fond normale
             }
         });
+        
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,28 +73,11 @@ public class Vue {
                         searchField.setForeground(Color.black);
                     }
                 });
-                searchField.addKeyListener(new KeyListener() {
-                    public void keyPressed(KeyEvent e){
-                    	if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                searchField.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
                         performSearch();
-                    	}
-                        
                     }
-
-					@Override
-					public void keyTyped(KeyEvent e) {
-						// TODO Auto-generated method stub
-						
-						
-					}
-
-					@Override
-					public void keyReleased(KeyEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					
                 });
                 searchPanel.add(searchField);
                 mainPanel.add(searchPanel, BorderLayout.NORTH);
@@ -217,27 +201,25 @@ public class Vue {
         afficherMusiques(musicPanel, play_list, imageSize, "");
         mainPanel.add(new JScrollPane(musicPanel), BorderLayout.CENTER);
         
+        
+        
+        userButton.setPreferredSize(new Dimension(preferredButtonWidth, userButton.getPreferredSize().height));
+        
+        
      // Ajouter les boutons au panneau des boutons
+        gbc.insets = new Insets(20, 0, 20, 0); // Appliquez des marges après le bouton de suggestion
+        buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
+        gbc.gridy++; // Passez à la ligne suivante
         buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(homeButton, gbc); // Ajouter le bouton d'accueil
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(favoritesButton, gbc); // Ajouter le bouton de favoris
         gbc.gridy++; // Passer à la ligne suivante
-        
-     // Ajoutez le bouton de suggestion avec un espace spécifique après les autres boutons
-
-        userButton.setPreferredSize(new Dimension(preferredButtonWidth, userButton.getPreferredSize().height));
         buttonPanel.add(recommendationButton, gbc); // Ajoutez le bouton de suggestion
-  
-       
-        gbc.gridy++; // Passez à la ligne suivante
-
-        // Ajoutez le bouton utilisateur avec un espace spécifique après le bouton de suggestion
-        gbc.insets = new Insets(100, 0, 100, 0); // Appliquez des marges après le bouton de suggestion
-        buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
         
 
+        
         mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
 
         frame.getContentPane().add(mainPanel);
