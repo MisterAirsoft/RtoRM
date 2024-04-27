@@ -17,12 +17,14 @@ public class Vue {
     private JPanel musicPanel;
     private int imageSize;
 
+    
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
         this.imageSize = imageSize;
         Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
         m = new Model();
         JFrame frame = new JFrame("RTR Musique 🎶 ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
 
 
         Font titleFont = new Font("Helvetica Neue Light", Font.ITALIC, 30);
@@ -79,6 +81,8 @@ public class Vue {
                         performSearch();
                     }
                 });
+                
+                
                 searchPanel.add(searchField);
                 mainPanel.add(searchPanel, BorderLayout.NORTH);
 
@@ -89,7 +93,21 @@ public class Vue {
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
+            private void performSearch() {
+                String keyword = searchField.getText().trim();
+                if (!keyword.isEmpty()) {
+                    // Appeler la méthode de recherche de musique dans le modèle
+                    m.rechercherMusique(keyword);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Veuillez saisir un mot-clé de recherche.", "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
+        
+        
+        
+        
      // Définir une largeur préférée pour tous les boutons
         int preferredButtonWidth = 400; // Largeur préférée en pixels
         searchButton.setPreferredSize(new Dimension(preferredButtonWidth, searchButton.getPreferredSize().height));
@@ -312,5 +330,7 @@ public class Vue {
             afficherMusiques(musicPanel, play_list, imageSize, "");
         }
     }
+    
 }
+
 
