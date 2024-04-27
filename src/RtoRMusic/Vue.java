@@ -225,9 +225,11 @@ public class Vue {
         
         
      // Ajouter les boutons au panneau des boutons
-        gbc.insets = new Insets(20, 0, 20, 0); // Appliquez des marges après le bouton de suggestion
+        gbc.insets = new Insets(0, 5, 150, 5); // Appliquez des marges après le bouton de suggestion
         buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
         gbc.gridy++; // Passez à la ligne suivante
+        
+        gbc.insets = new Insets(0, 0, 0, 0);
         buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(homeButton, gbc); // Ajouter le bouton d'accueil
