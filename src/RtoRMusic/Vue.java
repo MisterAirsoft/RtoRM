@@ -26,9 +26,11 @@ public class Vue {
 
     
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
-        this.imageSize = imageSize;
-        Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+
+    	this.imageSize = imageSize;
         m = new Model();
+    	// Désactiver les journaux de niveau supérieur pour le package org.jaudiotagger
+    	Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
         JFrame frame = new JFrame("RTR Musique 🎶 ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -93,9 +95,16 @@ public class Vue {
                 searchPanel.add(searchField);
              // Créer les boutons pour filtrer la recherche
                 JButton allButton = new JButton("ALL");
+                allButton.setBackground(Color.black);
+                
                 JButton titlesButton = new JButton("Titres");
+                titlesButton.setBackground(Color.black);
+                
                 JButton artistsButton = new JButton("Artistes");
+                artistsButton.setBackground(Color.black);
+                
                 JButton albumsButton = new JButton("Albums");
+                albumsButton.setBackground(Color.black);
 
                 // Ajouter des actions aux boutons de filtrage
                 allButton.addActionListener(new ActionListener() {
@@ -104,6 +113,17 @@ public class Vue {
                         filterSearch("ALL");
                     }
                 });
+                allButton.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                    	allButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                    	allButton.setBackground(Color.black); // Retour à la couleur de fond normale
+                    }
+                });
+                
+                
 
                 titlesButton.addActionListener(new ActionListener() {
                     @Override
@@ -111,6 +131,17 @@ public class Vue {
                         filterSearch("Titres");
                     }
                 });
+                titlesButton.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                    	titlesButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                    	titlesButton.setBackground(Color.black); // Retour à la couleur de fond normale
+                    }
+                });
+                
+                
 
                 artistsButton.addActionListener(new ActionListener() {
                     @Override
@@ -118,6 +149,17 @@ public class Vue {
                         filterSearch("Artistes");
                     }
                 });
+                artistsButton.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                    	artistsButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                    	artistsButton.setBackground(Color.black); // Retour à la couleur de fond normale
+                    }
+                });
+                
+                
 
                 albumsButton.addActionListener(new ActionListener() {
                     @Override
@@ -125,6 +167,16 @@ public class Vue {
                         filterSearch("Albums");
                     }
                 });
+                albumsButton.addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent evt) {
+                    	albumsButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+                    }
+
+                    public void mouseExited(MouseEvent evt) {
+                    	albumsButton.setBackground(Color.black); // Retour à la couleur de fond normale
+                    }
+                });
+                
 
                 // Ajouter les boutons de filtrage au panneau de recherche
                 searchPanel.add(allButton);
@@ -389,6 +441,8 @@ public class Vue {
     // Méthode pour afficher les musiques en fonction du filtre sélectionné
     void afficherMusiques(JPanel panel, TreeMap<String, Musique> musiques, int imageSize, String searchTerm, String filter) {
         panel.removeAll();
+        boolean resultFound = false; // Initialiser le boolean à false
+
 
         for (Map.Entry<String, Musique> entry : musiques.entrySet()) {
             Musique musique = entry.getValue();
@@ -404,6 +458,7 @@ public class Vue {
                  (filter.equals("album") && musique.album.toLowerCase().contains(searchTerm.toLowerCase())) ||
                  (filter.equals("genre") && musique.genre.toLowerCase().contains(searchTerm.toLowerCase()))) {
                 matchFilter = true;
+                resultFound = true; // Au moins une correspondance a été trouvée
             }
 
             if (matchFilter) {
@@ -467,6 +522,24 @@ public class Vue {
                 panel.add(itemPanel);
             }
         }
+        if (!resultFound) {
+            JLabel noResultLabel = new JLabel("Aucun résultat 😭");
+            noResultLabel.setFont(new Font("Helvetica Neue Light", Font.BOLD, 50)); // Définir une taille de police plus grande
+            
+            
+         // Créer un JPanel avec un GridBagLayout pour centrer le composant
+            JPanel centerPanel = new JPanel(new GridBagLayout());
+            centerPanel.setBackground(Color.BLACK);
+            
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal pour centrer le composant
+            centerPanel.add(noResultLabel, gbc);
+            
+            // Ajouter le panel centré au panel principal
+            panel.add(centerPanel, BorderLayout.CENTER);
+        }
 
         // Rafraîchir et redessiner le panel principal
         panel.revalidate();
@@ -474,8 +547,6 @@ public class Vue {
     }
 
 } 
-
-    
 
 
 
