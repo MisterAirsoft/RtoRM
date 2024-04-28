@@ -93,16 +93,7 @@ public class Vue {
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
-            private void performSearch() {
-                String keyword = searchField.getText().trim();
-                if (!keyword.isEmpty()) {
-                    // Appeler la méthode de recherche de musique dans le modèle
-                    m.rechercherMusique(keyword);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Veuillez saisir un mot-clé de recherche.", "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            }
+       
         });
         
         
@@ -225,13 +216,15 @@ public class Vue {
         
         
      // Ajouter les boutons au panneau des boutons
-        gbc.insets = new Insets(0, 5, 150, 5); // Appliquez des marges après le bouton de suggestion
+        
+       
         buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
         gbc.gridy++; // Passez à la ligne suivante
+        gbc.insets = new Insets(400, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
         
-        gbc.insets = new Insets(0, 0, 0, 0);
         buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
         gbc.gridy++; // Passer à la ligne suivante
+        gbc.insets = new Insets(0, 0, 0, 0);
         buttonPanel.add(homeButton, gbc); // Ajouter le bouton d'accueil
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(favoritesButton, gbc); // Ajouter le bouton de favoris
@@ -324,6 +317,7 @@ public class Vue {
         panel.revalidate();
         panel.repaint();
     }
+
     private void performSearch() {
         String searchTerm = searchField.getText();
         if (!searchTerm.isEmpty()) {
@@ -332,7 +326,8 @@ public class Vue {
             afficherMusiques(musicPanel, play_list, imageSize, "");
         }
     }
-    
 }
+    
+
 
 
