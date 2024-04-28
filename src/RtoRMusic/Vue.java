@@ -16,6 +16,13 @@ public class Vue {
     private JTextField searchField;
     private JPanel musicPanel;
     private int imageSize;
+    
+    private String currentFilter = "ALL";
+
+    private void filterSearch(String filter) {
+        currentFilter = filter;
+        performSearch(); // Réexécuter la recherche avec le nouveau filtre
+    }
 
     
     public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
@@ -32,9 +39,9 @@ public class Vue {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
+        
         // Créer un nouveau JPanel pour les boutons et utiliser GridBagLayout pour qu'ils prennent toute la hauteur de la page
         JPanel buttonPanel = new JPanel(new GridBagLayout());
-
         buttonPanel.setBackground(Color.BLACK); // Définir la couleur de fond du panneau des boutons
 
         // Créer un objet GridBagConstraints pour configurer le positionnement et le dimensionnement des composants dans GridBagLayout
@@ -84,6 +91,48 @@ public class Vue {
                 
                 
                 searchPanel.add(searchField);
+             // Créer les boutons pour filtrer la recherche
+                JButton allButton = new JButton("ALL");
+                JButton titlesButton = new JButton("Titres");
+                JButton artistsButton = new JButton("Artistes");
+                JButton albumsButton = new JButton("Albums");
+
+                // Ajouter des actions aux boutons de filtrage
+                allButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterSearch("ALL");
+                    }
+                });
+
+                titlesButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterSearch("Titres");
+                    }
+                });
+
+                artistsButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterSearch("Artistes");
+                    }
+                });
+
+                albumsButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        filterSearch("Albums");
+                    }
+                });
+
+                // Ajouter les boutons de filtrage au panneau de recherche
+                searchPanel.add(allButton);
+                searchPanel.add(titlesButton);
+                searchPanel.add(artistsButton);
+                searchPanel.add(albumsButton);
+
+                // Ajouter le panneau de recherche au panneau principal
                 mainPanel.add(searchPanel, BorderLayout.NORTH);
 
                 // Réinitialiser la couleur d'arrière-plan du bouton "Rechercher"
@@ -93,7 +142,6 @@ public class Vue {
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
-       
         });
         
         
@@ -319,14 +367,114 @@ public class Vue {
     }
 
     private void performSearch() {
-        String searchTerm = searchField.getText();
+        String searchTerm = searchField.getText().toLowerCase(); // Convertir le terme de recherche en minuscules
         if (!searchTerm.isEmpty()) {
-            afficherMusiques(musicPanel, play_list, imageSize, searchTerm);
+            // Filtrer la recherche en fonction du critère sélectionné
+            if (currentFilter.equals("Titres")) {
+                afficherMusiques(musicPanel, play_list, imageSize, searchTerm, "titre");
+            } else if (currentFilter.equals("Artistes")) {
+                afficherMusiques(musicPanel, play_list, imageSize, searchTerm, "artist");
+            } else if (currentFilter.equals("Albums")) {
+                afficherMusiques(musicPanel, play_list, imageSize, searchTerm, "album");
+            } else {
+                afficherMusiques(musicPanel, play_list, imageSize, searchTerm, "all");
+            }
         } else {
-            afficherMusiques(musicPanel, play_list, imageSize, "");
+            // Si le champ de recherche est vide, afficher toutes les musiques
+            afficherMusiques(musicPanel, play_list, imageSize, "", "all");
         }
     }
-}
+
+
+    // Méthode pour afficher les musiques en fonction du filtre sélectionné
+    void afficherMusiques(JPanel panel, TreeMap<String, Musique> musiques, int imageSize, String searchTerm, String filter) {
+        panel.removeAll();
+
+        for (Map.Entry<String, Musique> entry : musiques.entrySet()) {
+            Musique musique = entry.getValue();
+
+            boolean matchFilter = false;
+
+            if ((filter.equals("all") && 
+                 (musique.titre.toLowerCase().contains(searchTerm.toLowerCase()) ||
+                  musique.artist.toLowerCase().contains(searchTerm.toLowerCase()) ||
+                  musique.album.toLowerCase().contains(searchTerm.toLowerCase()))) ||
+                 (filter.equals("titre") && musique.titre.toLowerCase().contains(searchTerm.toLowerCase())) ||
+                 (filter.equals("artist") && musique.artist.toLowerCase().contains(searchTerm.toLowerCase())) ||
+                 (filter.equals("album") && musique.album.toLowerCase().contains(searchTerm.toLowerCase())) ||
+                 (filter.equals("genre") && musique.genre.toLowerCase().contains(searchTerm.toLowerCase()))) {
+                matchFilter = true;
+            }
+
+            if (matchFilter) {
+                // Afficher la musique
+                ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
+                Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+                imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                // Utilisation de JPanel pour organiser les informations cote a cote 
+                JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    	
+
+                // Labels pour les informations de la musique
+                JLabel titleLabel = new JLabel("Title: " + musique.titre);
+                JLabel artistLabel = new JLabel("Artist: " + musique.artist);
+                JLabel albumLabel = new JLabel("Album: " + musique.album);
+                
+                // Bouton "like" (favori)
+                JButton favButton = new JButton("❤️");
+                favButton.setSize(50, 50); // Définir une taille plus petite si nécessaire
+
+                // Mettre le bouton en rouge si la musique est en favori
+                if (musique.aimer) {
+                    favButton.setForeground(Color.RED);
+                } else {
+                    favButton.setForeground(Color.WHITE);
+                }
+                favButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Inverser l'état de la musique comme favori
+                        musique.aimer = !musique.aimer;
+                        m.modifier_list_musique_aimer(musique);
+
+                        // Changer la couleur du bouton cœur en fonction de l'état de la musique
+                        if (musique.aimer) {
+                            favButton.setForeground(Color.RED); // Bouton rouge si la musique est en favori
+                        } else {
+                            favButton.setForeground(Color.WHITE); // Bouton blanc si la musique n'est pas en favori
+                        }
+                    }
+                });
+             // Ajout de bordures entre les labels (utilisation de EmptyBorder)
+                int borderSize = 5; // Taille de la bordure
+                titleLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, borderSize)); // Bordure à droite du titre
+                artistLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, borderSize)); // Bordure à gauche et droite de l'artiste
+                albumLabel.setBorder(BorderFactory.createEmptyBorder(borderSize*10, borderSize, 0, 0)); // Bordure à gauche de l'album
+                // Ajouter les composants au panel d'informations
+                infoPanel.add(titleLabel, BorderLayout.WEST);
+                infoPanel.add(artistLabel, BorderLayout.CENTER);
+                infoPanel.add(albumLabel, BorderLayout.EAST);
+                
+                // Utilisation d'un layout flexible pour organiser l'image et les informations
+                JPanel itemPanel = new JPanel(new BorderLayout());
+                itemPanel.add(imageLabel, BorderLayout.WEST);
+                itemPanel.add(infoPanel, BorderLayout.CENTER);
+                
+                itemPanel.add(favButton, BorderLayout.EAST);
+
+                // Ajouter le panel d'élément à votre panel principal
+                panel.add(itemPanel);
+            }
+        }
+
+        // Rafraîchir et redessiner le panel principal
+        panel.revalidate();
+        panel.repaint();
+    }
+
+} 
+
     
 
 
