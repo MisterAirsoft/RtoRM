@@ -300,8 +300,29 @@ public class Vue {
         });
      
 
-
-
+        JButton Upload = new JButton("↑ Téléverser");
+        Upload.setFont(titleFont1);
+        Upload.setBackground(Color.black);
+        Upload.setForeground(Color.white);
+        Upload.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+            	Upload.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
+            }
+            public void mouseExited(MouseEvent evt) {
+            	Upload.setBackground(Color.black); // Retour à la couleur de fond normale
+            }
+        });
+        Upload.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //action du bouton lance la fenetre pour televerser un fichier
+            	Mp3DragAndDrop F1=new Mp3DragAndDrop();
+            	F1.show(true);  
+            }
+        });
+        buttonPanel.setPreferredSize(new Dimension(preferredButtonWidth,  recommendationButton.getPreferredSize().height));
+        
+       
         mainPanel.add(buttonPanel, BorderLayout.WEST);
 
         musicPanel = new JPanel(new GridLayout(0, columns, 5, 5));
@@ -330,7 +351,8 @@ public class Vue {
         buttonPanel.add(favoritesButton, gbc); // Ajouter le bouton de favoris
         gbc.gridy++; // Passer à la ligne suivante
         buttonPanel.add(recommendationButton, gbc); // Ajoutez le bouton de suggestion
-        
+        gbc.gridy++;
+        buttonPanel.add(Upload,gbc);
 
         
         mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
@@ -547,6 +569,5 @@ public class Vue {
     }
 
 } 
-
 
 
