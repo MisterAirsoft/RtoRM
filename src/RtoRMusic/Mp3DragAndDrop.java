@@ -70,12 +70,6 @@ public class Mp3DragAndDrop extends JFrame {
             }
         }
     }
-    private void addMp3File(File file) {
-        JLabel mp3Label = new JLabel(file.getName());
-        mp3Panel.add(mp3Label);
-        mp3Panel.revalidate();
-        mp3Panel.repaint();
-    }
     private class Mp3DropTargetListener extends DropTargetAdapter {
         @Override
         public void drop(DropTargetDropEvent event) {
@@ -147,7 +141,7 @@ public class Mp3DragAndDrop extends JFrame {
             }
         }
     }
-    private void addMp3File1(File file) {
+    private void addMp3File(File file) {
         JLabel mp3Label = new JLabel(file.getName());
         mp3Panel.add(mp3Label);
         mp3Panel.revalidate();
@@ -159,14 +153,17 @@ public class Mp3DragAndDrop extends JFrame {
         // Créer le dossier "Music" s'il n'existe pas
         File musicFolder = new File(musicFolderPath);
         if (!musicFolder.exists()) {
-            musicFolder.mkdir();
+        	musicFolder.mkdir();
+           
         }
 
         // Déplacer/copier le fichier MP3 dans le dossier "Music"
         try {
             Files.copy(file.toPath(), new File(musicFolderPath + File.separator + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            
         } catch (IOException e) {
             e.printStackTrace();
+           
         }
     }
 
