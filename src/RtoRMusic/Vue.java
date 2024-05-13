@@ -338,6 +338,13 @@ public class Vue {
 		gbc.gridy++; // Passez à la ligne suivante
 		gbc.insets = new Insets(400, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
 
+		BufferedImage imgLogo = ImageIO.read(new File("Logo.png"));//mise en place du logo
+		ImageIcon imageIcon = new ImageIcon(imgLogo);
+		Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		JLabel imageLabel = new JLabel (new ImageIcon(resizedImage));
+		buttonPanel.add(imageLabel,gbc);
+		buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
 		gbc.gridy++; // Passer à la ligne suivante
 		gbc.insets = new Insets(0, 0, 0, 0);
