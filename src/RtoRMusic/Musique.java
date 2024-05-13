@@ -2,6 +2,8 @@ package RtoRMusic;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import javax.swing.JLabel;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -21,6 +23,7 @@ public class Musique implements Comparable<Musique>{
 	public String commentaire;
 	public int nb_d_Ecoute;
 	public boolean aimer=false;
+	public JLabel image_musique ;
 
 	public Musique(String fichier) {
 	    File audioFile = new File("Music/" + fichier);

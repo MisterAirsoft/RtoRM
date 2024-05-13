@@ -4,17 +4,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.TreeSet;
 
 public class Mp3DragAndDrop extends JFrame {
     private JPanel mp3Panel;
     private JLabel dropFolderLabel;
+    private Model m;
 
-    public Mp3DragAndDrop() {
+    public Mp3DragAndDrop(Model m) {
+    	this.m=m;
         setTitle("MP3 Drag and Drop");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// Fermer la JFrame actuelle
+				dispose();
+			}
+		});
         setLayout(new BorderLayout());
 
         mp3Panel = new JPanel();
@@ -39,10 +50,7 @@ public class Mp3DragAndDrop extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(Mp3DragAndDrop::new);
-    }
-
+   
     private class Mp3TransferHandler extends TransferHandler {
         @Override
         public boolean canImport(TransferHandler.TransferSupport support) {
@@ -165,6 +173,54 @@ public class Mp3DragAndDrop extends JFrame {
             e.printStackTrace();
            
         }
+        Musique musique = new Musique(file.getName());
+		m.play_list.put(m.normalisation_text(musique.titre + musique.artist.split("/")[0]), musique);
+		
+		ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
+		Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+		imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		musique.image_musique=imageLabel;
+		
+		if (file.getName().compareTo(
+				m.normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3") != 0) {
+
+			file.renameTo(new File("Music/"
+					+ m.normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3"));
+		}
+		
+
+		for (String artist : musique.artist.split("/")) {
+
+			if (m.listeAlbumParArtiste.containsKey(artist)) {
+				if (!(m.listeAlbumParArtiste.get(artist).contains(musique.album))) {
+					m.listeAlbumParArtiste.get(artist).add(musique.album);
+				}
+
+			} else {
+
+				TreeSet<String> listeAlbum = new TreeSet<>();
+				listeAlbum.add(musique.album);
+				m.listeAlbumParArtiste.put(artist, listeAlbum);
+
+			}
+
+		}
+
+		if (m.listeMusiqueParAlbum.containsKey(musique.album)
+				&& (m.listeMusiqueParAlbum.get(musique.album).last() != musique)) {
+			m.listeMusiqueParAlbum.get(musique.album).add(musique);
+		} else if ((m.listeMusiqueParAlbum.containsValue(musique)) == false) {
+
+			TreeSet<String> listeMusique = new TreeSet<>();
+			listeMusique.add(musique.titre);
+			m.listeAlbumParArtiste.put(musique.album, listeMusique);
+
+		}
+
+
+
+
     }
 
 }

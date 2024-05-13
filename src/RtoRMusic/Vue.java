@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Vue {
+	public Fenetre_Utilisateur U ;
 	private Model m;
 	private TreeMap<String, Musique> play_list;
 	private JTextField searchField;
@@ -37,6 +38,7 @@ public class Vue {
 		m = new Model();
 		// Désactiver les journaux de niveau supérieur pour le package org.jaudiotagger
 		Logger.getLogger("org.jaudiotagger").setLevel(Level.WARNING);
+		
 		JFrame frame = new JFrame("RTR Musique 🎶 ");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -294,6 +296,7 @@ public class Vue {
 				LoginForm();
 			}
 		});
+		 U = new Fenetre_Utilisateur(play_list, musicPanel, imageSize, m, this); //Classe qui créer la fenêtre utilisateur
 
 		JButton Upload = new JButton("↑ Téléverser");
 		Upload.setFont(titleFont1);
@@ -312,7 +315,7 @@ public class Vue {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// action du bouton lance la fenetre pour televerser un fichier
-				Mp3DragAndDrop F1 = new Mp3DragAndDrop();
+				Mp3DragAndDrop F1 = new Mp3DragAndDrop(m);
 				F1.show(true);
 			}
 		});
@@ -366,10 +369,8 @@ public class Vue {
 					|| musique.album.toLowerCase().contains(searchTerm.toLowerCase())
 					|| musique.genre.toLowerCase().contains(searchTerm.toLowerCase())) {
 
-				ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
-				Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-				JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
-				imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+				
+				
 
 				// Utilisation de JPanel pour organiser les informations cote a cote
 				JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -427,11 +428,13 @@ public class Vue {
 				infoPanel.add(albumLabel, BorderLayout.EAST);
 
 				// Utilisation d'un layout flexible pour organiser l'image et les informations
-				JPanel itemPanel = new JPanel(new BorderLayout());
+				JPanel itemPanel = new JPanel();
+				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+				favButton.setMinimumSize(new Dimension(100, 100));
 				itemPanel.add(favButton, BorderLayout.WEST);
 
-				itemPanel.add(imageLabel, BorderLayout.WEST);
-				itemPanel.add(infoPanel, BorderLayout.CENTER);
+				itemPanel.add(musique.image_musique, BorderLayout.WEST);
+				itemPanel.add(infoPanel, BorderLayout.WEST);
 
 				// Ajouter le panel d'élément à votre panel principal
 				panel.add(itemPanel);
@@ -548,11 +551,14 @@ public class Vue {
 				infoPanel.add(albumLabel, BorderLayout.EAST);
 
 				// Utilisation d'un layout flexible pour organiser l'image et les informations
-				JPanel itemPanel = new JPanel(new BorderLayout());
+				JPanel itemPanel = new JPanel();
+				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+			    favButton.setSize(imageSize,imageSize);
+				itemPanel.add(favButton, BorderLayout.WEST);
 				itemPanel.add(imageLabel, BorderLayout.WEST);
-				itemPanel.add(infoPanel, BorderLayout.CENTER);
+				itemPanel.add(infoPanel, BorderLayout.WEST);
 
-				itemPanel.add(favButton, BorderLayout.EAST);
+				
 
 				// Ajouter le panel d'élément à votre panel principal
 				panel.add(itemPanel);
@@ -583,21 +589,26 @@ public class Vue {
 	}
 
 	public void LoginForm() {
+		U.musicPanel=musicPanel;
+		U.play_list=m.play_list;
+		
 		if (m.utilisateur.compareTo("Invite") != 0) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					// Votre code à exécuter dans le thread de l'interface utilisateur (Swing EDT)
-					DeConnectionUtilisateur_Fenetre();
+					
+					U.DeConnectionUtilisateur_Fenetre();
 				}
 			});
 
 		} else {
+			
 			SwingUtilities.invokeLater(new Runnable() {
-				@Override
 				public void run() {
 					// Votre code à exécuter dans le thread de l'interface utilisateur (Swing EDT)
-					ConnectionUtilisateur_Fenetre();
+					
+					U.ConnectionUtilisateur_Fenetre();
 				}
 			});
 		}
@@ -606,186 +617,6 @@ public class Vue {
 
 	}
 
-	public void ConnectionUtilisateur_Fenetre() {
-		JFrame connection_utilisateur = new JFrame("Utilisateur ");
-
-		// Ajouter un gestionnaire d'événements WindowListener pour détecter la
-		// fermeture de la fenêtre
-		connection_utilisateur.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// Fermer la JFrame actuelle
-				connection_utilisateur.dispose();
-			}
-		});
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
-
-		// Créer les composants
-		JTextField usernameField = new JTextField(20);
-		JPasswordField passwordField = new JPasswordField(20);
-		JLabel text = new JLabel("Conectez vous ou creez un compte");
-
-		// Créer un panneau pour les composants
-		JPanel panel = new JPanel(new GridLayout(2, 2));
-		panel.add(new JLabel("Nom d'utilisateur:"));
-		panel.add(usernameField);
-		panel.add(new JLabel("Mot de passe:"));
-		panel.add(passwordField);
-		JPanel panel2 = new JPanel(new GridLayout(1, 1));
-		panel2.add(text, BorderLayout.CENTER);
-
-		// Créer un bouton de connexion
-		JButton loginButton = new JButton("Se connecter");
-		loginButton.addActionListener(e -> {
-			// Récupérer le nom d'utilisateur et le mot de passe
-			String username = usernameField.getText();
-			String password = new String(passwordField.getPassword());
-
-			File fichier = new File("Utilisateur", username);
-
-			// Vérifier si le fichier existe dans le dossier
-			if (fichier.exists()) {
-				FileReader fileReader;
-				try {
-					fileReader = new FileReader("Utilisateur/" + username);
-
-					// Création d'un bufferedReader qui utilise le fileReader
-					BufferedReader reader = new BufferedReader(fileReader);
-
-					String mot_de_passe = reader.readLine();// la première ligne contient le mot de passe
-					if (mot_de_passe.compareTo(password) == 0) {
-						m.utilisateur = username;
-						m.mot_de_passe = mot_de_passe;
-
-						m.changement_d_utilisateur();
-						SwingUtilities.invokeLater(() -> {
-							text.setText("Connection Réussie");
-							// Forcer la répétition du rendu pour actualiser l'affichage
-							connection_utilisateur.revalidate();
-						});
-
-						afficherMusiques(musicPanel, play_list, imageSize, "");
-
-						connection_utilisateur.dispose();
-
-					} else {
-						text.setText("Mauvais de mot de passe");
-
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			} else {
-				m.utilisateur = username;
-				m.mot_de_passe = password;
-
-				/* modifie le fichier de l'utilisateur */
-				PrintWriter writer;
-				try {
-					writer = new PrintWriter("Utilisateur/" + username, "UTF-8");
-					writer.println(password);
-					writer.close();
-					try {
-						m.changement_d_utilisateur();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					text.setText("Nouvelle Utilisateur creer");
-					connection_utilisateur.repaint();
-
-					afficherMusiques(musicPanel, play_list, imageSize, "");
-
-					connection_utilisateur.dispose();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-
-			// Ici, vous pouvez mettre la logique de vérification du nom d'utilisateur et du
-			// mot de passe
-			// Par exemple, vérification dans une base de données
-
-			// Pour l'exemple, affichons simplement les informations saisies
-			System.out.println("Nom d'utilisateur: " + username);
-			System.out.println("Mot de passe: " + password);
-		});
-
-		// Ajouter les composants à la fenêtre
-		connection_utilisateur.getContentPane().add(panel, BorderLayout.CENTER);
-		connection_utilisateur.getContentPane().add(panel2, BorderLayout.NORTH);
-		connection_utilisateur.getContentPane().add(loginButton, BorderLayout.SOUTH);
-
-		connection_utilisateur.pack();
-		connection_utilisateur.setVisible(true);
-
-	}
-
-	public void DeConnectionUtilisateur_Fenetre() {
-		JFrame connection_utilisateur = new JFrame("Utilisateur ");
-
-		// Ajouter un gestionnaire d'événements WindowListener pour détecter la
-		// fermeture de la fenêtre
-		connection_utilisateur.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// Fermer la JFrame actuelle
-				connection_utilisateur.dispose();
-			}
-		});
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBackground(Color.BLACK); // Définir la couleur de fond du mainPanel
-
-		// Créer les composants
-		JTextField usernameField = new JTextField(20);
-		JPasswordField passwordField = new JPasswordField(20);
-		JLabel text = new JLabel(m.utilisateur);
-		
-		JPanel panel2 = new JPanel(new GridLayout(3, 2));
-		panel2.add(text, BorderLayout.CENTER);
-
-		
-
-		
-
-		// Créer un bouton de connexion
-		JButton loginButton = new JButton("Se deconnecter");
-		loginButton.addActionListener(e -> {
-		m.utilisateur="Invite";
-		try {
-			m.changement_d_utilisateur();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-			
-	
-		afficherMusiques(musicPanel, play_list, imageSize, "");
-		connection_utilisateur.dispose();
-		});
-
-			
-		
-
-				
-		
-		// Ajouter les composants à la fenêtre
-	
-		connection_utilisateur.getContentPane().add(panel2, BorderLayout.NORTH);
-		connection_utilisateur.getContentPane().add(loginButton, BorderLayout.SOUTH);
-		
-		connection_utilisateur.pack();
-		connection_utilisateur.setVisible(true);
-
-	}
 		
 	
 }

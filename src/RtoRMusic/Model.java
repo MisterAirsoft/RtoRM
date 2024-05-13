@@ -1,6 +1,7 @@
 package RtoRMusic;
 
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +20,8 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,6 +49,7 @@ public class Model {
 	}
 
 	public TreeMap<String, Musique> construire_play_list(String folderPath) {
+		//racourcir_les_musiques("Music/");
 
 		play_list = new TreeMap<String, Musique>(); // créer une play_list vide
 		listeAlbumParArtiste = new TreeMap<String, TreeSet<String>>();
@@ -60,13 +64,20 @@ public class Model {
 					try {
 						Musique musique = new Musique(file.getName());
 						play_list.put(normalisation_text(musique.titre + musique.artist.split("/")[0]), musique);
-						System.out.println(file);
+						
+						ImageIcon imageIcon = new ImageIcon(musique.artwork.getBinaryData());
+						Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+						JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+						imageLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+						musique.image_musique=imageLabel;
+						
 						if (file.getName().compareTo(
 								normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3") != 0) {
 
 							file.renameTo(new File("Music/"
 									+ normalisation_text(musique.titre + musique.artist.split("/")[0]) + ".mp3"));
 						}
+						
 
 						for (String artist : musique.artist.split("/")) {
 
