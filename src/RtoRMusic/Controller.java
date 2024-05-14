@@ -1,5 +1,6 @@
 package RtoRMusic;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,7 +11,7 @@ public class Controller extends javax.swing.JFrame {
 		getComponents();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		 Logger jAudioTaggerLogger = Logger.getLogger("org.jaudiotagger");
 	     jAudioTaggerLogger.setLevel(Level.WARNING); 
 		
