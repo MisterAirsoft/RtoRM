@@ -1,11 +1,13 @@
 package RtoRMusic;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicBorders.SplitPaneBorder;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,8 +34,8 @@ public class Vue {
 		performSearch(); // Réexécuter la recherche avec le nouveau filtre
 	}
 
-	public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) {
-
+	public void extractAndDisplayAlbumArt(String folderPath, int columns, int imageSize) throws IOException {
+		int preferredButtonWidth = 400;
 		this.imageSize = imageSize;
 		m = new Model();
 		// Désactiver les journaux de niveau supérieur pour le package org.jaudiotagger
@@ -196,7 +198,7 @@ public class Vue {
 		});
 
 		// Définir une largeur préférée pour tous les boutons
-		int preferredButtonWidth = 400; // Largeur préférée en pixels
+		 // Largeur préférée en pixels
 		searchButton.setPreferredSize(new Dimension(preferredButtonWidth, searchButton.getPreferredSize().height));
 		buttonPanel.add(searchButton, gbc);
 		buttonPanel.add(searchButton);
@@ -279,6 +281,7 @@ public class Vue {
 		userButton.setFont(titleFont1);
 		userButton.setBackground(Color.black);
 		userButton.setForeground(Color.white);
+		
 		userButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent evt) {
 				userButton.setBackground(new Color(161, 25, 195)); // Couleur de fond légèrement plus claire
@@ -319,8 +322,8 @@ public class Vue {
 				F1.show(true);
 			}
 		});
-		buttonPanel
-				.setPreferredSize(new Dimension(preferredButtonWidth, recommendationButton.getPreferredSize().height));
+		Upload.setPreferredSize(new Dimension(preferredButtonWidth, Upload.getPreferredSize().height));
+		buttonPanel.setPreferredSize(new Dimension(preferredButtonWidth, buttonPanel.getPreferredSize().height));
 
 		mainPanel.add(buttonPanel, BorderLayout.WEST);
 
@@ -336,15 +339,16 @@ public class Vue {
 
 		buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
 		gbc.gridy++; // Passez à la ligne suivante
-		gbc.insets = new Insets(400, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
-
+		gbc.insets = new Insets(200, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
+		
 		BufferedImage imgLogo = ImageIO.read(new File("Logo.png"));//mise en place du logo
 		ImageIcon imageIcon = new ImageIcon(imgLogo);
-		Image resizedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		Image resizedImage = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		JLabel imageLabel = new JLabel (new ImageIcon(resizedImage));
 		buttonPanel.add(imageLabel,gbc);
 		buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
+		gbc.insets = new Insets(200, 0, 0, 0);
+		gbc.gridy++;
 		buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
 		gbc.gridy++; // Passer à la ligne suivante
 		gbc.insets = new Insets(0, 0, 0, 0);
@@ -355,6 +359,7 @@ public class Vue {
 		buttonPanel.add(recommendationButton, gbc); // Ajoutez le bouton de suggestion
 		gbc.gridy++;
 		buttonPanel.add(Upload, gbc);
+		
 
 		mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
 
@@ -430,6 +435,10 @@ public class Vue {
 																											// gauche de
 																											// l'album
 				// Ajouter les composants au panel d'informations
+				favButton.setMinimumSize(new Dimension(100, 100));
+				infoPanel.add(favButton, BorderLayout.WEST);
+
+				infoPanel.add(musique.image_musique, BorderLayout.WEST);
 				infoPanel.add(titleLabel, BorderLayout.WEST);
 				infoPanel.add(artistLabel, BorderLayout.CENTER);
 				infoPanel.add(albumLabel, BorderLayout.EAST);
@@ -437,10 +446,8 @@ public class Vue {
 				// Utilisation d'un layout flexible pour organiser l'image et les informations
 				JPanel itemPanel = new JPanel();
 				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-				favButton.setMinimumSize(new Dimension(100, 100));
-				itemPanel.add(favButton, BorderLayout.WEST);
-
-				itemPanel.add(musique.image_musique, BorderLayout.WEST);
+				
+				
 				itemPanel.add(infoPanel, BorderLayout.WEST);
 
 				// Ajouter le panel d'élément à votre panel principal
@@ -553,6 +560,9 @@ public class Vue {
 																											// gauche de
 																											// l'album
 				// Ajouter les composants au panel d'informations
+				favButton.setSize(imageSize,imageSize);
+			    infoPanel.add(favButton, BorderLayout.WEST);
+				infoPanel.add(imageLabel, BorderLayout.WEST);
 				infoPanel.add(titleLabel, BorderLayout.WEST);
 				infoPanel.add(artistLabel, BorderLayout.CENTER);
 				infoPanel.add(albumLabel, BorderLayout.EAST);
@@ -560,9 +570,7 @@ public class Vue {
 				// Utilisation d'un layout flexible pour organiser l'image et les informations
 				JPanel itemPanel = new JPanel();
 				itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
-			    favButton.setSize(imageSize,imageSize);
-				itemPanel.add(favButton, BorderLayout.WEST);
-				itemPanel.add(imageLabel, BorderLayout.WEST);
+			    
 				itemPanel.add(infoPanel, BorderLayout.WEST);
 
 				
