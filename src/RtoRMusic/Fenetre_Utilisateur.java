@@ -176,6 +176,7 @@ public class Fenetre_Utilisateur extends JFrame {
 			m.utilisateur = "Invite";
 			try {
 				m.changement_d_utilisateur();
+				v.userButton.setText("👤 "+m.utilisateur);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -255,6 +256,7 @@ public class Fenetre_Utilisateur extends JFrame {
 					if (mot_de_passe.compareTo(password) == 0) {
 						m.utilisateur = username;
 						m.mot_de_passe = mot_de_passe;
+						v.userButton.setText("👤 "+m.utilisateur);
 
 						m.changement_d_utilisateur();
 						SwingUtilities.invokeLater(() -> {
@@ -297,6 +299,7 @@ public class Fenetre_Utilisateur extends JFrame {
 				} else {
 					m.utilisateur = username;
 					m.mot_de_passe = password;
+					v.userButton.setText("👤 "+m.utilisateur);
 
 					/* modifie le fichier de l'utilisateur */
 					PrintWriter writer;

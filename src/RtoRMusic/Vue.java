@@ -26,6 +26,7 @@ public class Vue {
 	private JTextField searchField;
 	private JPanel musicPanel;
 	private int imageSize;
+	public JButton userButton;
 
 	private String currentFilter = "ALL";
 
@@ -277,7 +278,8 @@ public class Vue {
 		buttonPanel.add(recommendationButton, gbc);
 		buttonPanel.add(recommendationButton);
 
-		JButton userButton = new JButton("👤 Utilisateur");
+        userButton = new JButton("👤 "+m.utilisateur);
+		
 		userButton.setFont(titleFont1);
 		userButton.setBackground(Color.black);
 		userButton.setForeground(Color.white);
