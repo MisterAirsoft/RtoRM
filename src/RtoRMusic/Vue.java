@@ -336,18 +336,17 @@ public class Vue {
 		userButton.setPreferredSize(new Dimension(preferredButtonWidth, userButton.getPreferredSize().height));
 
 		// Ajouter les boutons au panneau des boutons
-
+		
 		buttonPanel.add(userButton, gbc); // Ajoutez le bouton utilisateur
 		gbc.gridy++; // Passez à la ligne suivante
-		gbc.insets = new Insets(200, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
+		gbc.insets = new Insets(0, 0, 0, 0); // Appliquez des marges après le bouton de suggestion
+		
 		
 		BufferedImage imgLogo = ImageIO.read(new File("Logo.png"));//mise en place du logo
 		ImageIcon imageIcon = new ImageIcon(imgLogo);
-		Image resizedImage = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image resizedImage = imageIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
 		JLabel imageLabel = new JLabel (new ImageIcon(resizedImage));
 		buttonPanel.add(imageLabel,gbc);
-		buttonPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		gbc.insets = new Insets(200, 0, 0, 0);
 		gbc.gridy++;
 		buttonPanel.add(searchButton, gbc); // Ajouter le bouton de recherche
 		gbc.gridy++; // Passer à la ligne suivante
@@ -359,14 +358,20 @@ public class Vue {
 		buttonPanel.add(recommendationButton, gbc); // Ajoutez le bouton de suggestion
 		gbc.gridy++;
 		buttonPanel.add(Upload, gbc);
-		
+
+
+	
+	
 
 		mainPanel.add(buttonPanel, BorderLayout.WEST); // Ajouter le panneau des boutons au mainPanel
 
 		frame.getContentPane().add(mainPanel);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
+		frame.setDefaultLookAndFeelDecorated(true);
+		frame.setExtendedState(frame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
+		
 		frame.setFont(titleFont);
 	}
 
